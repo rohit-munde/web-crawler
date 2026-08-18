@@ -21,5 +21,6 @@ public class HtmlParser {
 //        return doc.select("href").stream()
 //                .map(link -> link.attr("href"))
 //                .toList();
+        // this shit is working
     }
 }
