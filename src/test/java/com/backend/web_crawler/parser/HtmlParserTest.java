@@ -14,20 +14,18 @@ public class HtmlParserTest {
     @Test
     void shouldExtractUrlFromHtml() {
         String html = """
-            <html>
-                <head>
-                    <title>Test Page</title>
-                </head>
-                <body>
-                    <a href="https://example.com">Example</a>
-                    <a href="https://test.com">Test</a>
-                </body>
-            </html>""";
+                <html>
+                    <head>
+                        <title>Test Page</title>
+                    </head>
+                    <body>
+                        <a href="https://example.com">Example</a>
+                        <a href="https://test.com">Test</a>
+                    </body>
+                </html>""";
 
         HtmlParser htmlParser = new HtmlParser();
-        List<String> urls = new ArrayList<>();
-
-        urls = htmlParser.extractUrls(html);
+        List<String> urls = htmlParser.extractUrls(html);
 
         assertEquals(2, urls.size());
         assertTrue(urls.contains("https://example.com"));
