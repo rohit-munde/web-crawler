@@ -1,15 +1,13 @@
 package com.backend.web_crawler.parser;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
-public class HtmlParserTest {
+class HtmlParserTest {
 
     @Test
     void shouldExtractUrlFromHtml() {
