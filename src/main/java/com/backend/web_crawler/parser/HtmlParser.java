@@ -1,26 +1,52 @@
 package com.backend.web_crawler.parser;
 
+import com.backend.web_crawler.entity.Page;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class HtmlParser {
 
     public List<String> extractUrls(String html) {
+        if (html == null || html.isBlank()) {
+            return new ArrayList<>();
+        }
         Document doc = Jsoup.parse(html);
 
-        List<String> temp = new ArrayList<>();
-        for (org.jsoup.nodes.Element link : doc.select("a[href]")) {
-            temp.add(link.attr("href"));
+        List<String> result = new ArrayList<>();
+        if (doc.body() != null) {
+            Elements links = doc.body().getElementsByTag("a");
+            for (int i = 0; i < links.size(); i++) {
+                Element element = links.get(i);
+                result.add(element.attr("href"));
+            }
         }
+        return result;
+    }
 
-        return temp;
-//
-//        return doc.select("href").stream()
-//                .map(link -> link.attr("href"))
-//                .toList();
-        // this shit is working
+    public Page extractURL(String url) {
+        Page page = new Page();
+        try {
+            URI uri = new URI(url);
+            URL httpUrl = uri.toURL();
+            Document doc = Jsoup.parse(httpUrl, 10000);
+            page.setLinks(this.extractUrls(doc.html()));
+            if (doc.body() != null) {
+                page.setContent(doc.body().text());
+            }
+            return page;
+        } catch (URISyntaxException | IOException e) {
+            return page;
+        }
     }
 }
