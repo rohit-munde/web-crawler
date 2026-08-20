@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.backend.web_crawler.data.Page;
+
 class HtmlParserTest {
 
     @Test
@@ -30,5 +32,15 @@ class HtmlParserTest {
         assertTrue(urls.contains("https://test.com"));
 
         assertThat(urls).containsExactlyInAnyOrder("https://example.com", "https://test.com");
+    }
+
+    @Test
+    void shouldHaveContent() {
+        HtmlParser htmlParser = new HtmlParser();
+        Page url = htmlParser.extractURL("https://www.agileguru.org");
+
+        assertThat(url.getContent()).isNotNull().isNotEmpty();
+        assertThat(url.getLinks()).isNotEmpty();
+
     }
 }
