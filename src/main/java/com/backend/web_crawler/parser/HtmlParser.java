@@ -1,6 +1,12 @@
 package com.backend.web_crawler.parser;
 
-import com.backend.web_crawler.entity.Page;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,7 +20,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+import com.backend.web_crawler.data.Page;
+
 public class HtmlParser {
 
     public List<String> extractUrls(String html) {
@@ -41,12 +48,11 @@ public class HtmlParser {
             URL httpUrl = uri.toURL();
             Document doc = Jsoup.parse(httpUrl, 10000);
             page.setLinks(this.extractUrls(doc.html()));
-            if (doc.body() != null) {
-                page.setContent(doc.body().text());
-            }
+            page.setContent(doc.body().text());
             return page;
         } catch (URISyntaxException | IOException e) {
             return page;
         }
     }
+
 }
