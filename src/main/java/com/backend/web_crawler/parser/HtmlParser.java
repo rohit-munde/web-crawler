@@ -19,17 +19,27 @@ import com.backend.web_crawler.data.Page;
 public class HtmlParser {
 
     public List<String> extractUrls(String html) {
+        return extractUrls(html, null);
+    }
+
+    public List<String> extractUrls(String html, String url) {
         if (html == null || html.isBlank()) {
             return new ArrayList<>();
         }
-        Document doc = Jsoup.parse(html);
 
+        Document doc = (url != null) ? Jsoup.parse(html, url) : Jsoup.parse(html);
         List<String> result = new ArrayList<>();
-        if (doc.body().hasText()) {
+        if (doc.body() != null && doc.body().hasText()) {
             Elements links = doc.body().getElementsByTag("a");
-            for (int i = 0; i < links.size(); i++) {
-                Element element = links.get(i);
-                result.add(element.attr("href"));
+            for (Element element : links) {
+                // absUrl resolves relative links like "/wiki/Cricket" to full URLs
+                String href = element.absUrl("href");
+                if (href.isBlank()) {
+                    href = element.attr("href");
+                }
+                if (!href.isBlank() && (href.startsWith("http://") || href.startsWith("https://"))) {
+                    result.add(href);
+                }
             }
         }
         return result;
@@ -41,8 +51,8 @@ public class HtmlParser {
             URI uri = new URI(url);
             URL httpUrl = uri.toURL();
             Document doc = Jsoup.parse(httpUrl, 10000);
-            page.setLinks(this.extractUrls(doc.html()));
-            page.setContent(doc.body().text());
+            page.setLinks(this.extractUrls(doc.html(), url));
+            page.setContent(doc.body() != null ? doc.body().text() : "");
             return page;
         } catch (URISyntaxException | IOException e) {
             return page;

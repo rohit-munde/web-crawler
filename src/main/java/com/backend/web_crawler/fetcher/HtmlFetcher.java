@@ -59,7 +59,7 @@ public class HtmlFetcher {
 
             String[] extractedUrls = new String[0];
             if (success && response.body() != null && !response.body().isBlank()) {
-                List<String> urls = htmlParser.extractUrls(response.body());
+                List<String> urls = htmlParser.extractUrls(response.body(), url);
                 extractedUrls = urls.toArray(new String[0]);
             }
 
