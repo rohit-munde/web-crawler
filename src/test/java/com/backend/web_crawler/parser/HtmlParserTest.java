@@ -1,15 +1,15 @@
 package com.backend.web_crawler.parser;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
-public class HtmlParserTest {
+import com.backend.web_crawler.data.Page;
+
+class HtmlParserTest {
 
     @Test
     void shouldExtractUrlFromHtml() {
@@ -32,5 +32,15 @@ public class HtmlParserTest {
         assertTrue(urls.contains("https://test.com"));
 
         assertThat(urls).containsExactlyInAnyOrder("https://example.com", "https://test.com");
+    }
+
+    @Test
+    void shouldHaveContent() {
+        HtmlParser htmlParser = new HtmlParser();
+        Page url = htmlParser.extractURL("https://www.agileguru.org");
+
+        assertThat(url.getContent()).isNotNull().isNotEmpty();
+        assertThat(url.getLinks()).isNotEmpty();
+
     }
 }
